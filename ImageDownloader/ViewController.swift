@@ -13,22 +13,20 @@ class ViewController: UIViewController {
     var avaterImage: UIImage!
     override func viewDidLoad() {
         super.viewDidLoad()
-        downloadImage { image in
+        downloadImage(urlString: "https://avatars.githubusercontent.com/u/70302575?v=4") { image in        //　メモリリークを防ぐ
             DispatchQueue.main.async { [weak self] in
                 self?.iconView.image = image
 
             }
-
-
         }
     }
 
 
 
-    func downloadImage(sucsess: @escaping(UIImage) -> Void) {
-        var request = URLRequest(url: URL(string: "https://avatars.githubusercontent.com/u/72324850?v=4")!)
-        request.httpMethod = "GET"
 
+    func downloadImage(urlString: String, sucsess: @escaping(UIImage) -> Void) {
+        var request = URLRequest(url: URL(string: urlString)!)
+        request.httpMethod = "GET"
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("エラー", error)
