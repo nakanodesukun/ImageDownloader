@@ -9,14 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var iconView: UIImageView!
     var avaterImage: UIImage!
     override func viewDidLoad() {
         super.viewDidLoad()
         downloadImage(urlString: "https://avatars.githubusercontent.com/u/70302575?v=4") { image in        //　メモリリークを防ぐ
             DispatchQueue.main.async { [weak self] in
+                self?.activityIndicatorView.startAnimating()
                 self?.iconView.image = image
-
             }
         }
     }
@@ -39,10 +40,12 @@ class ViewController: UIViewController {
                 print("UIImage型への変換に失敗しました。", error)
                 return
             }
+            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
             sucsess(imageData)
+            }
+
 //            DispatchQueue.main.async {
 //            }
-
         }
         task.resume()
     }
